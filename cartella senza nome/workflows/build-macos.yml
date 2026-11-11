@@ -1,0 +1,42 @@
+name: Build Onyx EQ for macOS
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Get source
+        uses: actions/checkout@v4
+
+      - name: Install CMake
+        run: brew install cmake
+
+      - name: Configure universal macOS build
+        run: |
+          cmake -S . -B build -G Xcode \
+            -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
+            -DCMAKE_OSX_DEPLOYMENT_TARGET=11.0 \
+            -DCMAKE_BUILD_TYPE=Release
+
+      - name: Compile VST3 and Audio Unit
+        run: cmake --build build --config Release --parallel 3
+
+      - name: Package plugins
+        run: |
+          mkdir -p release
+          ditto "build/OnyxEQ_artefacts/Release/VST3/Onyx EQ.vst3" "release/Onyx EQ.vst3"
+          ditto "build/OnyxEQ_artefacts/Release/AU/Onyx EQ.component" "release/Onyx EQ.component"
+          cd release
+          zip -r "Onyx EQ macOS.zip" "Onyx EQ.vst3" "Onyx EQ.component"
+
+      - name: Upload finished plugins
+        uses: actions/upload-artifact@v4
+        with:
+          name: Onyx-EQ-macOS-VST3-AU
+          path: release/Onyx EQ macOS.zip
+          if-no-files-found: error
+          retention-days: 30
