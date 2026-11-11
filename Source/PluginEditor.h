@@ -3,10 +3,25 @@
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
 
-class OnyxEQAudioProcessorEditor : public juce::AudioProcessorEditor
+class OnyxLookAndFeel : public juce::LookAndFeel_V4
 {
 public:
-    explicit OnyxEQAudioProcessorEditor(OnyxEQAudioProcessor&);
+    void drawRotarySlider(
+        juce::Graphics& g,
+        int x, int y, int width, int height,
+        float sliderPosProportional,
+        float rotaryStartAngle,
+        float rotaryEndAngle,
+        juce::Slider& slider) override;
+};
+
+class OnyxEQAudioProcessorEditor
+    : public juce::AudioProcessorEditor
+{
+public:
+    explicit OnyxEQAudioProcessorEditor(
+        OnyxEQAudioProcessor&);
+
     ~OnyxEQAudioProcessorEditor() override = default;
 
     void paint(juce::Graphics&) override;
@@ -21,9 +36,17 @@ private:
 
     OnyxEQAudioProcessor& processor;
 
-    juce::Slider low, lm, lmf, hm, hmf, high;
+    OnyxLookAndFeel onyxLookAndFeel;
 
-    juce::ToggleButton lowCut, bypass;
+    juce::Slider low;
+    juce::Slider lm;
+    juce::Slider lmf;
+    juce::Slider hm;
+    juce::Slider hmf;
+    juce::Slider high;
+
+    juce::ToggleButton lowCut;
+    juce::ToggleButton bypass;
 
     std::unique_ptr<SliderAttachment> aLow;
     std::unique_ptr<SliderAttachment> aLm;
@@ -35,7 +58,8 @@ private:
     std::unique_ptr<ButtonAttachment> aLowCut;
     std::unique_ptr<ButtonAttachment> aBypass;
 
-    juce::Label brand, subtitle;
+    juce::Label brand;
+    juce::Label subtitle;
 
     void styleKnob(
         juce::Slider&,
