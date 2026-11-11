@@ -22,7 +22,7 @@ public:
     explicit OnyxEQAudioProcessorEditor(
         OnyxEQAudioProcessor&);
 
-    ~OnyxEQAudioProcessorEditor() override = default;
+    ~OnyxEQAudioProcessorEditor() override;
 
     void paint(juce::Graphics&) override;
     void resized() override;
