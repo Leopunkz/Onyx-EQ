@@ -1,4 +1,3 @@
-
 #pragma once
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
@@ -35,28 +34,17 @@ private:
         juce::AudioProcessorValueTreeState::ButtonAttachment;
 
     OnyxEQAudioProcessor& processor;
-
     OnyxLookAndFeel onyxLookAndFeel;
 
-    juce::Slider low;
-    juce::Slider lm;
-    juce::Slider lmf;
-    juce::Slider hm;
-    juce::Slider hmf;
-    juce::Slider high;
+    juce::Slider low, lm, lmf, hm, hmf, high;
 
-    juce::ToggleButton lowCut;
-    juce::ToggleButton bypass;
+    juce::ToggleButton lowCut, bypass;
 
-    std::unique_ptr<SliderAttachment> aLow;
-    std::unique_ptr<SliderAttachment> aLm;
-    std::unique_ptr<SliderAttachment> aLmf;
-    std::unique_ptr<SliderAttachment> aHm;
-    std::unique_ptr<SliderAttachment> aHmf;
-    std::unique_ptr<SliderAttachment> aHigh;
+    std::unique_ptr<SliderAttachment>
+        aLow, aLm, aLmf, aHm, aHmf, aHigh;
 
-    std::unique_ptr<ButtonAttachment> aLowCut;
-    std::unique_ptr<ButtonAttachment> aBypass;
+    std::unique_ptr<ButtonAttachment>
+        aLowCut, aBypass;
 
     juce::Label brand;
     juce::Label subtitle;
@@ -64,6 +52,7 @@ private:
     void styleKnob(
         juce::Slider&,
         const juce::String&,
+        bool blueKnob,
         bool gainKnob);
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(
