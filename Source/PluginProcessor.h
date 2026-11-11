@@ -1,3 +1,4 @@
+
 #pragma once
 #include <JuceHeader.h>
 
@@ -30,25 +31,34 @@ public:
     juce::AudioProcessorValueTreeState parameters;
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 
-public:
     struct Biquad
     {
-        double b0=1, b1=0, b2=0, a1=0, a2=0;
-        double z1=0, z2=0;
-        void reset() { z1 = z2 = 0.0; }
+        double b0 = 1.0, b1 = 0.0, b2 = 0.0;
+        double a1 = 0.0, a2 = 0.0;
+        double z1 = 0.0, z2 = 0.0;
+
+        void reset()
+        {
+            z1 = z2 = 0.0;
+        }
+
         float process(float x)
         {
             const double y = b0 * x + z1;
             z1 = b1 * x - a1 * y + z2;
             z2 = b2 * x - a2 * y;
-            return (float)y;
+            return static_cast<float>(y);
         }
     };
 
 private:
-private:
     void updateFilters();
-    Biquad lowShelf[2], lowMid[2], highMid[2], highShelf[2];
+
+    Biquad lowShelf[2], lowMid[2];
+    Biquad highMid[2], highShelf[2];
+    Biquad lowCutFirst[2], lowCutSecond[2];
+
     double currentSampleRate = 44100.0;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OnyxEQAudioProcessor)
 };
